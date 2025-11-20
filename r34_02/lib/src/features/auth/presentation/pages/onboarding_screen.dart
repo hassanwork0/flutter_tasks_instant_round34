@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_store_task_app/src/core/constants/colors.dart';
+import 'package:flutter_store_task_app/src/core/routes/routes.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -13,9 +14,7 @@ class OnboardingScreen extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(
-                  'https://images.pexels.com/photos/4393426/pexels-photo-4393426.jpeg',
-                ), // Placeholder for delivery man
+                image: AssetImage('assets/images/onboarding_bg.png'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -46,11 +45,10 @@ class OnboardingScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  const Icon(
-                    Icons.eco,
-                    color: Colors.white,
-                    size: 50,
-                  ), // Carrot Logo Placeholder
+                  Image.asset(
+                    "assets/images/carrot_splashscreen.png",
+                    fit: BoxFit.cover,
+                  ),
                   const SizedBox(height: 10),
                   const Text(
                     "Welcome\nto our store",
@@ -82,7 +80,10 @@ class OnboardingScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, '/signin_landing');
+                        Navigator.pushNamed(
+                          context,
+                          RouteNames.signin_landing_screen,
+                        );
                       },
                       child: const Text(
                         "Get Started",

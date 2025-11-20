@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_store_task_app/src/core/constants/colors.dart';
+import 'package:flutter_store_task_app/src/core/routes/routes.dart';
 
 class SignInLandingScreen extends StatelessWidget {
   const SignInLandingScreen({super.key});
@@ -17,8 +18,9 @@ class SignInLandingScreen extends StatelessWidget {
             SizedBox(
               height: 380,
               width: double.infinity,
-              child: Image.network(
-                'https://img.freepik.com/free-photo/healthy-vegetables-full-paper-bag_23-2148043213.jpg', // Placeholder for top image
+              child: Image.asset(
+                'assets/images/onboarding_bg.png',
+                //'assets/images/signin_landing_screen.png', //doesn't work
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
               ),
@@ -43,7 +45,10 @@ class SignInLandingScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       // Navigate to the dedicated Number Entry Screen
-                      Navigator.pushNamed(context, '/enter_number');
+                      Navigator.pushNamed(
+                        context,
+                        RouteNames.enter_number_screen,
+                      );
                     },
                     child: Container(
                       decoration: const BoxDecoration(
@@ -96,7 +101,7 @@ class SignInLandingScreen extends StatelessWidget {
                         .g_mobiledata, // Using built-in icon for simplicity
                     onPressed: () {
                       // Navigate to Email Login as per your previous request flow
-                      Navigator.pushNamed(context, '/login');
+                      Navigator.pushNamed(context, RouteNames.login_screen);
                     },
                   ),
 

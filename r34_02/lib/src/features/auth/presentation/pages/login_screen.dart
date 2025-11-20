@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_store_task_app/src/core/constants/colors.dart';
+import 'package:flutter_store_task_app/src/core/routes/routes.dart';
 import 'package:flutter_store_task_app/src/features/auth/domain/auth_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +12,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController(
-    text: 'kminchelle',
-  ); // Default for demo
-  final _passwordController = TextEditingController(
-    text: '0lelplR',
-  ); // Default for demo
+  final _emailController = TextEditingController(text: 'kminchelle');
+  final _passwordController = TextEditingController(text: '0lelplR');
   bool _obscureText = true;
 
   @override
@@ -147,7 +144,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             _passwordController.text,
                           );
                           if (success && context.mounted) {
-                            Navigator.pushReplacementNamed(context, '/home');
+                            Navigator.pushReplacementNamed(
+                              context,
+                              RouteNames.home_screen,
+                            );
                           }
                         },
                   child: authProvider.isLoading

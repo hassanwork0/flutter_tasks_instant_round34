@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_store_task_app/src/core/constants/colors.dart';
+import 'package:flutter_store_task_app/src/core/routes/route_handler.dart';
 import 'package:flutter_store_task_app/src/features/auth/data/implements/auth_repository_imp.dart';
 import 'package:flutter_store_task_app/src/features/auth/domain/auth_provider.dart';
 import 'package:flutter_store_task_app/src/features/auth/presentation/pages/login_screen.dart';
@@ -30,21 +31,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Nectar Grocery',
         debugShowCheckedModeBanner: false,
+        onGenerateRoute: RouteHandler.generateRoute,
         theme: ThemeData(
           primaryColor: AppColors.primary,
           scaffoldBackgroundColor: Colors.white,
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
           useMaterial3: true,
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/onboarding': (context) => const OnboardingScreen(),
-          '/signin_landing': (context) => const SignInLandingScreen(),
-          '/enter_number': (context) => const NumberScreen(),
-          '/login': (context) => const LoginScreen(),
-          //'/home': (context) => const HomeScreen(),
-        },
+        //new way to route
       ),
     );
   }
