@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:r34_01/widgets/entrypoint_ui.dart';
+import 'package:r34_01/splash_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,6 +11,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: BottomNavBar());
+    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashPage(),);
   }
 }
