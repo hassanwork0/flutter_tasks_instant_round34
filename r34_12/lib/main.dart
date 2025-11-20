@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:market_app/screens/home_page.dart';
+import 'package:market_app/screens/splash.dart';
 
 void main() {
   runApp(const GroceryApp());
@@ -23,7 +23,7 @@ class GroceryApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }
