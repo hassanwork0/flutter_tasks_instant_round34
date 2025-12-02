@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:r34_16/src/features/entrypoint/domain/entities/product_entity.dart';
 
 class OurNewItemDetails extends StatefulWidget {
-  final Map<String, String> item;
-  const OurNewItemDetails({super.key, required this.item});
+  final ProductEntity product;
+  const OurNewItemDetails({super.key, required this.product});
 
   @override
   State<OurNewItemDetails> createState() => _OurNewItemDetailsState();
@@ -12,20 +13,19 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Replace with actual images
-  final List<String> _imageAssets = [
-    'assets/images/item1.png',
-    'assets/images/item2.png',
-    'assets/images/item3.png',
-  ];
-
   bool _isFavorite = false;
   int _quantity = 1;
 
-  final List<Map<String, String>> _itemDetails = [
-    {'name': 'Item A', 'weight': '1 Kg'},
-    {'name': 'Item B', 'weight': '500 g'},
-    {'name': 'Item C', 'weight': '2 Kg'},
+  List<String> get _images => [
+    widget.product.image,
+    widget.product.image,
+    widget.product.image,
+  ];
+
+  final List<Map<String, String>> _packItems = [
+    {'name': 'Item 1', 'weight': '1 Kg'},
+    {'name': 'Item 2', 'weight': '500 g'},
+    {'name': 'Item 3', 'weight': '2 Kg'},
   ];
 
   void _toggleFavorite() => setState(() => _isFavorite = !_isFavorite);
@@ -42,9 +42,9 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
     );
   }
 
-  void _onReviewTap() => print('Review tapped');
-  void _onBuyNowTap() => print('Buy Now tapped');
   void _onCartTap() => print('Cart tapped');
+  void _onBuyNowTap() => print('Buy Now tapped');
+  void _onReviewTap() => print('Review tapped');
 
   @override
   void dispose() {
@@ -54,14 +54,12 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(widget.item['title'] ?? 'Item Details',
-            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        leading: BackButton(color: Colors.black),
+        title: Text(product.title, style: const TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -70,7 +68,6 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Slider with Heart Icon
             Stack(
               alignment: Alignment.topRight,
               children: [
@@ -85,14 +82,17 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
                     borderRadius: BorderRadius.circular(12),
                     child: PageView(
                       controller: _pageController,
-                      onPageChanged: (index) => setState(() => _currentPage = index),
-                      children: _imageAssets.map((path) {
-                        return Image.asset(path,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
-                                  color: Colors.grey,
-                                  child: const Center(child: Text('Image')),
-                                ));
+                      onPageChanged: (index) =>
+                          setState(() => _currentPage = index),
+                      children: _images.map((imageUrl) {
+                        return Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: Colors.grey,
+                            child: const Center(child: Text('Failed to load')),
+                          ),
+                        );
                       }).toList(),
                     ),
                   ),
@@ -108,9 +108,19 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
-                      child: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.black),
+                      child: Icon(
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.red,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ),
@@ -122,16 +132,18 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
             // Page indicators
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(_imageAssets.length, (i) {
+              children: List.generate(_images.length, (index) {
                 return GestureDetector(
-                  onTap: () => _goToPage(i),
+                  onTap: () => _goToPage(index),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     height: 8,
-                    width: _currentPage == i ? 24 : 8,
+                    width: _currentPage == index ? 24 : 8,
                     decoration: BoxDecoration(
-                      color: _currentPage == i ? Colors.green : Colors.grey[400],
+                      color: _currentPage == index
+                          ? Colors.green
+                          : Colors.grey[400],
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -139,160 +151,228 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
               }),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // Title
-            Text(widget.item['title'] ?? 'Item Title',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            // Title & Category
+            Text(
+              product.title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              product.category,
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
+            ),
 
             const SizedBox(height: 16),
 
-            // Price + Quantity
+            // Price & Quantity
             Row(
               children: [
-                Text(widget.item['price'] ?? '\$0',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(width: 8),
-                Text('\$100',
-                    style: const TextStyle(
-                        decoration: TextDecoration.lineThrough, color: Colors.grey)),
+                Text(
+                  "\$${product.price}",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const Spacer(),
                 Row(
                   children: [
                     GestureDetector(
                       onTap: _decrementQuantity,
                       child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200], borderRadius: BorderRadius.circular(6)),
-                          child: const Icon(Icons.remove, size: 18)),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          Icons.remove,
+                          size: 18,
+                          color: _quantity > 1 ? Colors.black : Colors.grey,
+                        ),
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('$_quantity',
-                          style:
-                              const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '$_quantity',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     GestureDetector(
                       onTap: _incrementQuantity,
                       child: Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[200], borderRadius: BorderRadius.circular(6)),
-                          child: const Icon(Icons.add, size: 18)),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          size: 18,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
 
-            // Weight, Size, Items
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text('${_quantity * 2} Kg',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text('Weight', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Text('Medium',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text('Size', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('$_quantity',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text('Items', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                  ],
-                ),
-              ],
+            // Pack Details Section
+            const Text(
+              'Pack Details',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-
-            const SizedBox(height: 20),
-
-            // Item Details
-            const Text('Item Details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Column(
-              children: _itemDetails.map((item) {
+              children: _packItems.map((item) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(bottom: 16),
                   child: Row(
                     children: [
                       Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: Colors.green[100], borderRadius: BorderRadius.circular(8)),
-                          child: const Icon(Icons.eco, color: Colors.green)),
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(Icons.eco, color: Colors.green),
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
-                          child: Text(item['name']!, style: const TextStyle(fontWeight: FontWeight.w500))),
-                      Text(item['weight']!, style: const TextStyle(fontWeight: FontWeight.w500)),
+                        child: Text(
+                          item['name']!,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        item['weight']!,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                 );
               }).toList(),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            // Review
+            // Description
+            const Text(
+              'Description',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(product.description, style: const TextStyle(fontSize: 16)),
+
+            const SizedBox(height: 32),
+
+            // Review Section
             GestureDetector(
               onTap: _onReviewTap,
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
-                decoration:
-                    BoxDecoration(color: Colors.grey[50], borderRadius: BorderRadius.circular(12)),
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Row(
                   children: [
-                    const Text('Review', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text(
+                      'Review',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const Spacer(),
-                    Row(children: List.generate(5, (_) => const Icon(Icons.star, color: Colors.amber, size: 20))),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
+                    Row(
+                      children: [
+                        ...List.generate(
+                          5,
+                          (index) => const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.grey,
+                          size: 16,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            // Cart + Buy Now
+            // Cart & Buy Now buttons
             Row(
               children: [
                 GestureDetector(
                   onTap: _onCartTap,
                   child: Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
-                      child: const Icon(Icons.shopping_cart, color: Colors.black)),
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.black,
+                      size: 28,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: _onBuyNowTap,
-                    child: Container(
-                        height: 60,
-                        decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(12)),
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: _onBuyNowTap,
+                        borderRadius: BorderRadius.circular(12),
                         child: const Center(
-                            child: Text('Buy Now',
-                                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)))),
+                          child: Text(
+                            'Buy Now',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
