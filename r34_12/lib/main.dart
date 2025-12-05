@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:market_app/screens/splash.dart';
+import 'package:market_app/routes/pages.dart';
+import 'package:market_app/routes/route_name.dart';
 
 void main() {
   runApp(const GroceryApp());
@@ -13,6 +14,11 @@ class GroceryApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fresh Market',
       debugShowCheckedModeBanner: false,
+
+   
+      initialRoute: RouteName.splash,
+      onGenerateRoute: AppRoute.onGenerate,
+
       theme: ThemeData(
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: Colors.white,
@@ -23,7 +29,6 @@ class GroceryApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.black),
         ),
       ),
-      home: const SplashScreen(),
     );
   }
 }

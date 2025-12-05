@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_app/routes/route_name.dart';
 
 class SocialLoginScreen extends StatelessWidget {
   const SocialLoginScreen({super.key});
@@ -6,7 +7,7 @@ class SocialLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xfff9f6ff), // نفس الخلفية الفاتحة
+      backgroundColor: const Color(0xfff9f6ff),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -15,12 +16,12 @@ class SocialLoginScreen extends StatelessWidget {
               width: double.infinity,
               height: 350,
               child: Image.network(
-                'https://www.shutterstock.com/image-photo/paper-bag-full-fruits-vegetables-260nw-2501795705.jpg', //  هنا لينك الصورة 
+                'https://www.shutterstock.com/image-photo/paper-bag-full-fruits-vegetables-260nw-2501795705.jpg',
                 fit: BoxFit.cover,
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
 
             // Title
             const Padding(
@@ -34,7 +35,7 @@ class SocialLoginScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             const Text(
               "Connect using social media",
@@ -44,64 +45,68 @@ class SocialLoginScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
 
             // Google Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff5383EC),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Google",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+            _buildButton(
+              text: "Google",
+              color: Color(0xFF53B175),
+              onTap: () {},
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Facebook Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff4A66AC),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: const Text(
-                    "Facebook",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+            _buildButton(
+              text: "Facebook",
+              color: Color(0xFF53B175),
+              onTap: () {},
             ),
 
-            const SizedBox(height: 50),
+            const SizedBox(height: 25),
+
+            //Login Button
+            _buildButton(
+              text: "Account Login",
+              color: Color(0xFF53B175),
+              onTap: () {
+                Navigator.pushNamed(context, RouteName.login);
+              },
+            ),
+
+            const SizedBox(height: 40),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required String text,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: SizedBox(
+        width: double.infinity,
+        height: 55,
+        child: ElevatedButton(
+          onPressed: onTap,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );

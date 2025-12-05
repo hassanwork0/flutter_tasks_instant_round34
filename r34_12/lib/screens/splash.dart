@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:market_app/screens/onboarding_page.dart';
+import 'package:market_app/routes/route_name.dart';
+
 
 
 class SplashScreen extends StatefulWidget {
@@ -16,19 +17,16 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    // بعد 3 ثواني يروح على صفحة الترحيب
+    // بعد 3 ثواني يروح على صفحة onbording
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-      );
+      Navigator.pushNamed(context, RouteName.onboarding);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff53B175), // الأخضر
+      backgroundColor: const Color(0xff53B175),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

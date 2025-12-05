@@ -1,69 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:market_app/widgets/bottom_nav_bar.dart';
 import 'package:market_app/source/data.dart';
+import 'package:market_app/routes/route_name.dart';
 
 import '../entity/product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/section_header.dart';
 import '../screens/product_details_page.dart';
 
-
 class HomePage extends StatefulWidget { 
   const HomePage({super.key});
-   @override State<HomePage> createState() => _HomePageState(); 
-  }
+   
+  @override 
+  State<HomePage> createState() => _HomePageState(); 
+}
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  String _currentAddress = "Getting location...";
 
-  final Data data = Data(); // كلاس Data الجديد
+  final Data data = Data();
   List<Product> offers = [];
   List<Product> bestSelling = [];
 
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
     _loadProducts();
   }
 
   Future<void> _loadProducts() async {
     List<Product> products = await data.getAllProducts();
     setState(() {
-      // نفترض: أول 3 منتجات للعروض، والباقي للأكثر مبيعاً
       offers = products.take(3).toList();
       bestSelling = products.length > 3 ? products.sublist(3, products.length) : [];
     });
   }
 
-  Future<void> _getCurrentLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      setState(() => _currentAddress = "Location disabled");
-      return;
-    }
+  void _onItemTapped(int index) {
+  print(' Tab pressed: $index');
+  print('Current index: $_selectedIndex');
+  
+  setState(() {
+    _selectedIndex = index;
+  });
 
-    LocationPermission permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.deniedForever ||
-        permission == LocationPermission.denied) {
-      setState(() => _currentAddress = "Permission denied");
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-
-    Placemark place = placemarks[0];
-    setState(() {
-      _currentAddress = "${place.locality}, ${place.country}";
-    });
+  switch (index) {
+    case 0:
+      print(' Already on Home');
+      break;
+    case 1:
+      print(' Navigating to Explore');
+      Navigator.pushNamed(context, RouteName.explore);
+      break;
+    case 2:
+      print(' Navigating to Cart');
+      Navigator.pushNamed(context, RouteName.cart);
+      break;
+    case 3:
+      print(' Navigating to Favorite');
+      Navigator.pushNamed(context, RouteName.favorite);
+      break;
+    case 4:
+      print(' Navigating to Account');
+      Navigator.pushNamed(context, RouteName.account);
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -71,20 +73,9 @@ class _HomePageState extends State<HomePage> {
     final cardWidth = screenWidth * 0.45;
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CustomBottomNavBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: "Shop"),
-          BottomNavigationBarItem(icon: Icon(Icons.explore_outlined), label: "Explore"),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_cart_outlined), label: "Cart"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: "Favorite"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Account"),
-        ],
+        onTap: _onItemTapped,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -94,42 +85,24 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset("assets/images/logo.png", height: 50, fit: BoxFit.contain),
-                const SizedBox(height: 10),
-
-                // 🔹 Location
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.location_on, color: Colors.black, size: 20),
-                    const SizedBox(width: 5),
-                    Flexible(
-                      child: Text(
-                        _currentAddress,
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-
                 const SizedBox(height: 20),
 
                 //  Search bar
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      icon: Padding(
-                        padding: EdgeInsets.only(left: 12.0),
-                        child: Icon(Icons.search, color: Colors.black),
-                      ),
-                      hintText: "Search Store",
-                      border: InputBorder.none,
+                const TextField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xFFF2F3F2),
+                    prefixIcon: Icon(Icons.search, color: Colors.black),
+                    hintText: "Search Store",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide: BorderSide.none,
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                   ),
                 ),
 
@@ -147,7 +120,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 30),
 
                 //  Offers Section

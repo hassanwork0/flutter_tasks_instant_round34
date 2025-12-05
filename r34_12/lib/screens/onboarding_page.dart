@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_app/routes/route_name.dart';
 
 
 class WelcomeScreen extends StatelessWidget {
@@ -9,15 +10,13 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image
           Positioned.fill(
             child: Image.network(
               'https://t4.ftcdn.net/jpg/15/48/03/89/360_F_1548038986_qQlXefXvNfLNLKOQ3oPsPnrtVQjPz45i.jpg',
-              fit: BoxFit.cover, // الصورة كاملة
+              fit: BoxFit.cover,
             ),
           ),
 
-          // Gradient to darken the bottom
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -26,14 +25,13 @@ class WelcomeScreen extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+                    Colors.black,
                   ],
                 ),
               ),
             ),
           ),
 
-          // Content at the bottom
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
@@ -41,7 +39,6 @@ class WelcomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Logo
                   Image.asset(
                     "assets/images/logo.png",
                     width: 55,
@@ -73,13 +70,12 @@ class WelcomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 25),
 
-                  // Login Button
                   SizedBox(
                     width: double.infinity,
                     height: 55,
                     child: ElevatedButton(
                       onPressed: () {
-                       //loginpage
+                        Navigator.pushNamed(context, RouteName.social);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
