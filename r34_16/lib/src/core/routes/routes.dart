@@ -3,5 +3,11 @@ import 'package:r34_16/src/features/entrypoint/presentation/pages/details_page/o
 import 'package:r34_16/src/features/entrypoint/presentation/pages/details_page/popular_pack_details.dart';
 import 'package:r34_16/src/features/entrypoint/presentation/pages/entry_point_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:r34_16/src/features/intrologin/presentation/pages/intrologin_page.dart';
+import 'package:r34_16/src/features/location/presentation/pages/location.dart';
+import 'package:r34_16/src/features/login_or_signup/presentation/pages/login_method_page.dart';
+import 'package:r34_16/src/features/login_or_signup/presentation/pages/login_page.dart';
+import 'package:r34_16/src/features/login_or_signup/presentation/pages/signup_page.dart';
+import 'package:r34_16/src/features/onboarding/presentation/pages/onboarding_page.dart';
 part 'routes_handler.dart';
 part 'routes_name.dart';
