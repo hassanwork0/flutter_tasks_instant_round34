@@ -3,6 +3,10 @@ part of 'routes.dart';
 class RoutesHandler {
   static Route generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RoutesName.onboarding:
+        return MaterialPageRoute(builder: (context) => const OnboardingPage());
+      case RoutesName.intrologin:
+        return MaterialPageRoute(builder: (context) => const IntrologinPage());
       case RoutesName.entryPoint:
         return MaterialPageRoute(builder: (context) => const EntryPointUi());
       case RoutesName.ournewitemdetails:
@@ -11,10 +15,20 @@ class RoutesHandler {
           builder: (context) => OurNewItemDetails(product: args),
         );
       case RoutesName.popularpackdetails:
-        final args = settings.arguments as ProductEntity;
+        final args =
+            settings.arguments as ProductEntity; // <-- cast to ProductEntity
         return MaterialPageRoute(
-          builder: (context) => PopularPackDetails(product: args),
+          builder: (context) =>
+              PopularPackDetails(product: args), // <-- pass it
         );
+        case RoutesName.loginmethodpage:
+        return MaterialPageRoute(builder: (context) => const LoginMethodPage());
+        case RoutesName.signup:
+        return MaterialPageRoute(builder: (context) => const SignupPage());
+        case RoutesName.login:
+        return MaterialPageRoute(builder: (context) => const LoginPage());
+        case RoutesName.location:
+        return MaterialPageRoute(builder: (context) => const Location());
       default:
         return MaterialPageRoute(
           builder: (context) =>

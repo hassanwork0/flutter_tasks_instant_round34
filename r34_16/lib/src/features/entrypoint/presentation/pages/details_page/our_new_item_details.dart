@@ -1,3 +1,4 @@
+import 'package:r34_16/src/core/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:r34_16/src/features/entrypoint/domain/entities/product_entity.dart';
 
@@ -16,12 +17,14 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
   bool _isFavorite = false;
   int _quantity = 1;
 
+  // Example multiple images for slider
   List<String> get _images => [
     widget.product.image,
-    widget.product.image,
+    widget.product.image, // duplicate for demo
     widget.product.image,
   ];
 
+  // Example pack items
   final List<Map<String, String>> _packItems = [
     {'name': 'Item 1', 'weight': '1 Kg'},
     {'name': 'Item 2', 'weight': '500 g'},
@@ -43,7 +46,6 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
   }
 
   void _onCartTap() => print('Cart tapped');
-  void _onBuyNowTap() => print('Buy Now tapped');
   void _onReviewTap() => print('Review tapped');
 
   @override
@@ -68,6 +70,7 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Image slider with favorite button
             Stack(
               alignment: Alignment.topRight,
               children: [
@@ -329,7 +332,7 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
 
             const SizedBox(height: 24),
 
-            // Cart & Buy Now buttons
+            // Cart & Buy Now buttons (BundlePack style)
             Row(
               children: [
                 GestureDetector(
@@ -359,7 +362,9 @@ class _OurNewItemDetailsState extends State<OurNewItemDetails> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: _onBuyNowTap,
+                        onTap: () {
+                          Navigator.pushNamed(context, RoutesName.location);
+                        },
                         borderRadius: BorderRadius.circular(12),
                         child: const Center(
                           child: Text(
