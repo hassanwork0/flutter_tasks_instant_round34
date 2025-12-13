@@ -9,6 +9,7 @@ class ProductModel extends Product {
     required String image,
     required int sold,
     required int views,
+    required int qty,
   }) : super(
           id: id,
           title: title,
@@ -18,6 +19,8 @@ class ProductModel extends Product {
           image: image,
           sold: sold,
           views: views,
+          qty:qty,
+
         );
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +33,9 @@ class ProductModel extends Product {
       image: json['image'] ?? '',
       sold: json['sold'] ?? 0,
       views: json['views'] ?? 0,
+      qty: json['qty'] ?? 0
+      
+
     );
   }
 }

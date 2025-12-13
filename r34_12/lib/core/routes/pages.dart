@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:market_app/routes/route_name.dart';
+import 'package:market_app/core/routes/route_name.dart';
 import 'package:market_app/screens/Social_Login.dart';
 import 'package:market_app/screens/account.dart';
+import 'package:market_app/screens/checkout.dart';
 import 'package:market_app/screens/explore.dart';
 import 'package:market_app/screens/splash.dart';
 import 'package:market_app/screens/onboarding_page.dart';
@@ -35,7 +36,7 @@ class AppRoute {
         return MaterialPageRoute(builder: (_) => const CartScreen());
 
       case RouteName.favorite:
-        return MaterialPageRoute(builder: (_) => const FavouriteScreen());
+        return MaterialPageRoute(builder: (_) => const FavouriteScreen(favouriteProducts: [],));
 
       case RouteName.location:
         return MaterialPageRoute(builder: (_) => const LocationScreen());
@@ -49,6 +50,10 @@ class AppRoute {
 
       case RouteName.social:
         return MaterialPageRoute(builder: (_) => SocialLoginScreen());
+
+      case RouteName.social:
+        return MaterialPageRoute(builder: (_) => SimpleCheckoutScreen());
+
 
      
    
