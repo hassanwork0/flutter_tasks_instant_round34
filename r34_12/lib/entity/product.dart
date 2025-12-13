@@ -7,6 +7,7 @@ class Product {
   final String image;
   final int sold;
   final int views;
+  int qty;
 
   Product({
     required this.id,
@@ -17,5 +18,6 @@ class Product {
     required this.image,
     required this.sold,
     required this.views,
+    required this.qty,
   });
 }

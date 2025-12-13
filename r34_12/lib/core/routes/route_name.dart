@@ -2,6 +2,7 @@ class RouteName {
 
   static const String init ='/';
 
+
   static const String splash = '/splash';
   static const String onboarding = '/onboarding';
   static const String login = '/login';
@@ -13,6 +14,9 @@ class RouteName {
   static const String account = '/account';
   static const String location ='/location';
   static const String social ='/social';
+  static const String checkout ='/checkout';
+
+
 
 
 }

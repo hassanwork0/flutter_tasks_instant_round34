@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:market_app/routes/route_name.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:market_app/bloc/auth/auth_bloc.dart';
+import 'package:market_app/bloc/auth/auth_event.dart';
+import 'package:market_app/bloc/auth/auth_state.dart';
+import 'package:market_app/core/routes/route_name.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,155 +13,186 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool isPasswordVisible = false;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(25),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+              Image.asset(
                 "assets/images/logo.png",
-                height: 60,
+                height: 80,
               ),
-            ),
-            const SizedBox(height: 30),
-
-            const Text(
-              "Login",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 40),
+              const Text(
+                "Welcome Back",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              "Enter your email and password",
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
+              const SizedBox(height: 8),
+              const Text(
+                "Sign in to your account",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
-            ),
-            const SizedBox(height: 30),
+              const SizedBox(height: 40),
 
-            // Email
-            const Text(
-              "Email",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 5),
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Password
-            const Text(
-              "Password",
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 5),
-            TextField(
-              obscureText: !isPasswordVisible,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isPasswordVisible = !isPasswordVisible;
-                    });
-                  },
-                ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
+              // Email Field
+              Align(
+                alignment: Alignment.centerLeft,
                 child: const Text(
-                  "Forgot Password?",
-                  style: TextStyle(color: Colors.grey),
+                  "Email",
+                  style: TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // LOGIN BUTTON
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF53B175),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    hintText: "example@gmail.com",
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(16),
+                    prefixIcon: Icon(Icons.email_outlined),
                   ),
                 ),
+              ),
+              const SizedBox(height: 20),
 
-                onPressed: () {
-                 Navigator.pushNamed(context, RouteName.home);
+              // Password Field
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text(
+                  "Password",
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: "Enter your password",
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(16),
+                    prefixIcon: Icon(Icons.lock_outlined),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              // Login Button باستخدام BlocConsumer
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthSuccess) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RouteName.home, (route) => false);
+                  } else if (state is AuthError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
+                builder: (context, state) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: state is AuthLoading
+                          ? null
+                          : () {
+                              final email = emailController.text.trim();
+                              final password = passwordController.text.trim();
 
-                child: const Text(
-                  "Log In",
-                  style: TextStyle(fontSize: 17, color: Colors.white),
-                ),
+                              if (email.isEmpty || password.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        "Please enter email and password"),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                                return;
+                              }
+
+                              context.read<AuthBloc>().add(
+                                    EmailSignInEvent(
+                                        email: email, password: password),
+                                  );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF53B175),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: state is AuthLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              "Sign In",
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                    ),
+                  );
+                },
               ),
-            ),
 
-            const SizedBox(height: 25),
+              const SizedBox(height: 20),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account? ",
-                  style: TextStyle(color: Colors.grey),
-                ),
-
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, RouteName.signup);
-                  },
-                  child: const Text(
-                    "Signup",
-                    style: TextStyle(
-                      color: Color(0xFF53B175),
-                      fontWeight: FontWeight.bold,
+              // SignUp Link
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, RouteName.signup);
+                    },
+                    child: const Text(
+                      "Sign up",
+                      style: TextStyle(
+                        color: Color(0xFF53B175),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );

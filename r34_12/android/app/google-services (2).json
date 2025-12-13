@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "291489352345",
+    "project_id": "crypto-sphere-435723-j9",
+    "storage_bucket": "crypto-sphere-435723-j9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:291489352345:android:83acffc9ca657de641c608",
+        "android_client_info": {
+          "package_name": "com.example.market_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "291489352345-2g6p5p9f1fn8gl1sg18a3h72421ge8bt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIQunH7kwJloe-u8JppvInJrstOuL2oPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "291489352345-2g6p5p9f1fn8gl1sg18a3h72421ge8bt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
